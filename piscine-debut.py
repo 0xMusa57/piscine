@@ -1,9 +1,11 @@
 # Liste initiale des nageurs avec leur type de nage et le nombre de longueurs
 liste = [("Pierre","Dos",10),("Paul","Brasse",13),("Léa","Crawl",6), ("Léa","Brasse",8) ]
 commande = ''  # Variable pour stocker la commande de l'utilisateur
+listenages = []
+listenageur = []
 
 # Chargement des données depuis le fichier CSV
-def load(liste, filaname):
+def load(liste):
     fichier = open('save.csv', 'r')  # Ouvre le fichier en mode lecture
     for line in fichier:
         line = line.strip()  # Supprime les espaces ou sauts de ligne en début/fin de ligne
@@ -68,6 +70,21 @@ def cmd_nage(liste):
         if elt[1] == nom_nage:  # Filtre les entrées correspondant à la nage donnée
             print(f"{elt[0]:8}-  {elt[2]}")  # Affiche le nageur et la longueur
 
+def cmd_newnageur(listenageur):
+    prénom = input("Prénom du nouveau nageur ?")
+    id = len(listenageur)+1
+    listenageur.append((id,prénom))
+    print(listenageur)
+
+def cmd_newnage(listenages):
+    nomnage = input("Nom de la nouvelle nage ?")
+    id =len(listenages)+1
+    listenages.append((id,nomnage))
+    print(listenages)
+
+
+
+
 """ Exécution de toutes les fonctions créées auparavant """
 isAlive = True  # Variable de contrôle pour exécuter la boucle principale
 while isAlive: 
@@ -84,7 +101,7 @@ while isAlive:
         sauvegarder(liste) # Permet de sauvegarder la liste.
         continue
     
-    if commande == 'load': # Permet de charger les données de la bdd
+    if commande == 'load': # Permet de charger les donnéees de la bdd
         load(liste)
         continue
 
@@ -99,7 +116,14 @@ while isAlive:
     if commande == 'nage':
         cmd_nage(liste)  # Affiche les performances d'une nage spécifique
         continue
+
+    if commande == 'nouvelle nage':
+        cmd_newnage(liste)
+        continue
+
+    if commande =='nouveaux nageurs':
+        cmd_newnageur(liste)
+        continue
     
     # Message d'erreur pour les commandes inconnues
     print(f"Command {commande} inconnue")
-
