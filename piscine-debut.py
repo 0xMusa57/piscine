@@ -1,129 +1,138 @@
-# Liste initiale des nageurs avec leur type de nage et le nombre de longueurs
-liste = [("Pierre","Dos",10),("Paul","Brasse",13),("Léa","Crawl",6), ("Léa","Brasse",8) ]
-commande = ''  # Variable pour stocker la commande de l'utilisateur
-listenages = []
-listenageur = []
-
-# Chargement des données depuis le fichier CSV
-def load(liste):
-    fichier = open('save.csv', 'r')  # Ouvre le fichier en mode lecture
-    for line in fichier:
-        line = line.strip()  # Supprime les espaces ou sauts de ligne en début/fin de ligne
-        if line[0] == '#':  # Ignore les lignes de commentaire commençant par '#'
-            continue
-        tmp = line.split(',')  # Divise la ligne en plusieurs parties séparées par des virgules
-        liste.append(tuple(tmp))  # Ajoute chaque ligne comme un tuple dans la liste
-    fichier.close()  # Ferme le fichier après lecture
-
-""" Création de toutes les fonctions pour effectuer des actions sur la liste """
-
-def sauvegarder(liste,):
-    """Sauvegarde les données dans un fichier CSV"""
-    # Ouvre le fichier en mode écriture et sauvegarde chaque nageur sous forme de texte
-    with open('save.csv', 'w') as fichier:
-        for elt in liste:
-            # Ecrit chaque tuple dans une ligne du fichier CSV, séparée par des virgules
-            fichier.write(elt[0]+','+elt[1]+','+str(elt[2])+"\n")
-
-def cmd_exit():
-    """Commande pour quitter le programme"""
-    tmp = input("en êtes-vous sûr ? (o)ui/(n)on")  # Confirme la sortie avec l'utilisateur
-    if tmp == "o":
-        sauvegarder(liste)  # Sauvegarde les données avant de quitter
-        return False  # Change l'état de la boucle pour arrêter le programme
-    else:
-        return True  # Continue l'exécution du programme
+liste = [("Pierre","Dos",10),("Paul","Brasse",13),("Léa","Crawl",6), ("Léa","Brasse",8)]
+commande = ''
 
 def cmd_ajout(liste):
-    """Commande pour ajouter un nageur à la liste"""
-    # Demande les informations du nageur : nom, type de nage, et nombre de longueurs
+    """Ajoute un évènement à la liste"""
     a = input("Qui nage ? ")
     b = input("quelle nage ? ")
-    c = input("combien de longueur ? ")
-    liste.append((a, b, c))  # Ajoute les informations comme un tuple dans la liste
+    c = int(input("combien de longueur ? "))  # Conversion en entier
+    liste.append((a,b,c))
 
 def cmd_liste(liste):
-    """Affichage de la liste entière de tous les nageurs enregistrés"""
-    print("Prénom    -  nage  -  longueur")  # En-tête de tableau
-    print("------------------------------")  # Ligne de séparation
+    """Affiche toutes les performances des nageurs"""
+    print("Prénom      |  nage   |  longueur")
+    print("---------------------------------")
     for elt in liste:
-        # Affiche chaque nageur avec une mise en forme propre
-        print(f" {elt[0]:7} / {elt[1]:7} / {elt[2]}")
+        print(f" {elt[0]:11}| {elt[1]:8}|  {elt[2]}")
 
 def cmd_nageur(liste):
-    """Affiche toutes les performances d'un nageur donné"""
-    nom_nageur = input("Qui ?")  # Demande le nom du nageur à rechercher
-    print("performances de", nom_nageur)  # Titre de l'affichage
-    print("  nage  -  longueur")
-    print("-----------------")  # Ligne de séparation
+    """Affiche toutes les performances d'un nageur"""
+    tmp = input("Quel nageur ? ")
+    print("Performances de ", tmp)
+    print("  nage   |  longueur")
+    print("--------------------")
     for elt in liste:
-        if elt[0] == nom_nageur:  # Filtre les entrées correspondant au nageur donné
-            print(f"{elt[1]:8}-  {elt[2]}")  # Affiche la nage et la longueur
+        if elt[0]== tmp:
+            print(f" {elt[1]:8}|  {elt[2]}")
 
 def cmd_nage(liste):
-    """Affiche toutes les performances selon un type de nage donné"""
-    nom_nage = input("Quel nage ?")  # Demande le type de nage à rechercher
-    print("nage", nom_nage)  # Titre de l'affichage
-    print("  nageur -  longueur")
-    print("-----------------")  # Ligne de séparation
+    """Affiche toutes les performances suivant une nage donnée"""
+    tmp = input("Quel nage ? ")
+    print("Nage ", tmp)
+    print(" Nageur     |  longueur")
+    print("------------------------")
     for elt in liste:
-        if elt[1] == nom_nage:  # Filtre les entrées correspondant à la nage donnée
-            print(f"{elt[0]:8}-  {elt[2]}")  # Affiche le nageur et la longueur
+        if elt[1]== tmp:
+            print(f" {elt[0]:11}|  {elt[2]}")
 
-def cmd_newnageur(listenageur):
-    prénom = input("Prénom du nouveau nageur ?")
-    id = len(listenageur)+1
-    listenageur.append((id,prénom))
-    print(listenageur)
+def cmd_performance(liste):
+    """Gestion des performances"""
+    print("\nGestion des performances:")
+    print("1. Afficher les meilleures performances par nage")
+    print("2. Afficher les meilleures performances par nageur")
+    print("3. Afficher le record absolu")
+    choix = input("Votre choix (1-3) ? ")
+    
+    if choix == "1":
+        # Meilleures performances par nage
+        nages = set(elt[1] for elt in liste)  # Ensemble unique des nages
+        print("\nMeilleures performances par nage:")
+        print("Nage      | Nageur      | Longueur")
+        print("----------------------------------")
+        for nage in nages:
+            performances_nage = [(elt[0], elt[2]) for elt in liste if elt[1] == nage]
+            meilleur_nageur, meilleure_perf = max(performances_nage, key=lambda x: x[1])
+            print(f" {nage:9}| {meilleur_nageur:11}| {meilleure_perf}")
+    
+    elif choix == "2":
+        # Meilleures performances par nageur
+        nageurs = set(elt[0] for elt in liste)  # Ensemble unique des nageurs
+        print("\nMeilleures performances par nageur:")
+        print("Nageur      | Nage      | Longueur")
+        print("----------------------------------")
+        for nageur in nageurs:
+            performances_nageur = [(elt[1], elt[2]) for elt in liste if elt[0] == nageur]
+            meilleure_nage, meilleure_perf = max(performances_nageur, key=lambda x: x[1])
+            print(f" {nageur:11}| {meilleure_nage:9}| {meilleure_perf}")
+    
+    elif choix == "3":
+        # Record absolu
+        meilleur_nageur, meilleure_nage, meilleure_perf = max(liste, key=lambda x: x[2])
+        print("\nRecord absolu:")
+        print(f"Nageur: {meilleur_nageur}")
+        print(f"Nage: {meilleure_nage}")
+        print(f"Longueur: {meilleure_perf}")
 
-def cmd_newnage(listenages):
-    nomnage = input("Nom de la nouvelle nage ?")
-    id =len(listenages)+1
-    listenages.append((id,nomnage))
-    print(listenages)
+def cmd_exit(liste):
+    tmp = input("En êtes-vous sûr ? (o)ui/(n)on ")
+    if tmp == 'o':
+        cmd_save(liste, 'save.backup')
+        return False
+    else:
+        return True
 
+def cmd_save(liste, filename):
+    '''sauvegarde la BDD'''
+    fichier = open(filename, 'w')
+    for elt in liste:
+        fichier.write(elt[0]+','+elt[1]+','+str(elt[2])+"\n")
+    fichier.close()
 
+def cmd_load(liste, filename):
+    'charge la BDD'
+    fichier = open(filename, 'r')
+    for line in fichier:
+        line = line.strip()
+        if line[-1] == '\n':
+            line = line[:-1]
+        if line[0]=='#':
+            continue
+        tmp = line.split(',')
+        tmp[2] = int(tmp[2])  # Conversion en entier
+        liste.append(tuple(tmp))
+    fichier.close()
 
+def get_cmd():
+    '''Traitement de la commande d'entrée'''
+    msg = input("Que faut-il faire ? ")
+    msg = msg.lower()
+    return msg
 
-""" Exécution de toutes les fonctions créées auparavant """
-isAlive = True  # Variable de contrôle pour exécuter la boucle principale
-while isAlive: 
-    commande = input("Que faut-il faire ? ")  # Demande à l'utilisateur une commande
+isAlive = True
+while isAlive:
+    commande = get_cmd()
     if commande == 'ajout':
-        cmd_ajout(liste)  # Ajoute un nageur
+        cmd_ajout(liste)
         continue
-
     if commande == 'liste':
-        cmd_liste(liste)  # Affiche tous les nageurs
+        cmd_liste(liste)
         continue
-
-    if commande == 'save':
-        sauvegarder(liste) # Permet de sauvegarder la liste.
-        continue
-    
-    if commande == 'load': # Permet de charger les donnéees de la bdd
-        load(liste)
-        continue
-
     if commande == 'nageur':
-        cmd_nageur(liste)  # Affiche les performances d'un nageur donné
-        continue 
-
-    if commande == 'exit':
-        isAlive = cmd_exit()  # Gère la sortie du programme
-        continue 
-
+        cmd_nageur(liste)
+        continue
     if commande == 'nage':
-        cmd_nage(liste)  # Affiche les performances d'une nage spécifique
+        cmd_nage(liste)
         continue
-
-    if commande == 'nouvelle nage':
-        cmd_newnage(liste)
+    if commande == 'performance':
+        cmd_performance(liste)
         continue
-
-    if commande =='nouveaux nageurs':
-        cmd_newnageur(liste)
+    if commande == 'save':
+        cmd_save(liste, 'save.csv')
         continue
-    
-    # Message d'erreur pour les commandes inconnues
-    print(f"Command {commande} inconnue")
+    if commande == 'load':
+        cmd_load(liste, 'save.csv')
+        continue
+    if commande == 'exit':
+        isAlive = cmd_exit(liste)
+        continue
+    print(f"Commande {commande} inconnue")
