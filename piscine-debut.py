@@ -1,5 +1,16 @@
 from datetime import datetime, date
 
+def get_int_value(message="Valeur ? "):
+    """
+    Fonction qui vérifie que la saisie est bien un nombre entier
+    """
+    while True:
+        try:
+            msg = int(input(message))
+            return msg
+        except:
+            print("Indiquez bien une valeur numérique")
+
 # Modification de la structure des données pour inclure les dates
 liste = [
     ("Pierre", "Dos", 10, "2024-05-10"),
@@ -29,7 +40,7 @@ def cmd_ajout(liste):
     """Ajoute un évènement à la liste"""
     a = input("Qui nage ? ")
     b = input("Quelle nage ? ")
-    c = int(input("Combien de longueur ? "))
+    c = get_int_value("Combien de longueur ? ")  # Utilisation de get_int_value ici
     d = saisir_date()
     liste.append((a, b, c, d))
 
@@ -85,9 +96,9 @@ def cmd_visualisation(liste):
         print("4. Voir les performances par date")
         print("5. Voir le résumé global")
         print("6. Retour au menu principal")
-        
+       
         choix = input("\nVotre choix (1-6) ? ")
-        
+       
         if choix == "1":
             cmd_liste(liste)
         elif choix == "2":
@@ -105,14 +116,14 @@ def cmd_visualisation(liste):
             nageurs = set(elt[0] for elt in liste)
             nages = set(elt[1] for elt in liste)
             dates = sorted(set(elt[3] for elt in liste))
-            
+           
             print("\nRésumé global:")
             print(f"Nombre total de nageurs: {len(nageurs)}")
             print(f"Nombre total de nages différentes: {len(nages)}")
             print(f"Période: du {dates[0]} au {dates[-1]}")
             print("\nNageurs:", ", ".join(sorted(nageurs)))
             print("Nages:", ", ".join(sorted(nages)))
-            
+           
             # Meilleure performance globale
             meilleur_nageur, meilleure_nage, meilleure_perf, date_perf = max(liste, key=lambda x: x[2])
             print(f"\nMeilleure performance: {meilleur_nageur} ({meilleure_nage}) - {meilleure_perf} longueurs")
@@ -158,7 +169,7 @@ def get_cmd():
     print("- save: Sauvegarder les données")
     print("- load: Charger les données")
     print("- exit: Quitter le programme")
-    
+   
     msg = input("\nQue faut-il faire ? ")
     msg = msg.lower()
     return msg
