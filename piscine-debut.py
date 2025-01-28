@@ -1,4 +1,10 @@
-liste = [("Pierre","Dos",10),("Paul","Brasse",13),("Léa","Crawl",6), ("Léa","Brasse",8)]
+liste = [
+    ("Pierre", "Dos", 10),
+    ("Paul", "Brasse", 13),
+    ("Léa", "Crawl", 6),
+    ("Léa", "Brasse", 8),
+    ("Musa", "Papillon", 15)  # Ajout du nouveau nageur avec une nouvelle nage
+]
 commande = ''
 
 def cmd_ajout(liste):
