@@ -3,7 +3,7 @@ liste = [
     ("Paul", "Brasse", 13),
     ("Léa", "Crawl", 6),
     ("Léa", "Brasse", 8),
-    ("Musa", "Papillon", 15)  # Ajout du nouveau nageur avec une nouvelle nage
+    ("Musa", "Papillon", 15)
 ]
 commande = ''
 
@@ -11,11 +11,12 @@ def cmd_ajout(liste):
     """Ajoute un évènement à la liste"""
     a = input("Qui nage ? ")
     b = input("quelle nage ? ")
-    c = int(input("combien de longueur ? "))  # Conversion en entier
+    c = int(input("combien de longueur ? "))
     liste.append((a,b,c))
 
 def cmd_liste(liste):
     """Affiche toutes les performances des nageurs"""
+    print("\nToutes les performances:")
     print("Prénom      |  nage   |  longueur")
     print("---------------------------------")
     for elt in liste:
@@ -24,7 +25,7 @@ def cmd_liste(liste):
 def cmd_nageur(liste):
     """Affiche toutes les performances d'un nageur"""
     tmp = input("Quel nageur ? ")
-    print("Performances de ", tmp)
+    print("\nPerformances de", tmp)
     print("  nage   |  longueur")
     print("--------------------")
     for elt in liste:
@@ -34,12 +35,60 @@ def cmd_nageur(liste):
 def cmd_nage(liste):
     """Affiche toutes les performances suivant une nage donnée"""
     tmp = input("Quel nage ? ")
-    print("Nage ", tmp)
+    print("\nNage", tmp)
     print(" Nageur     |  longueur")
     print("------------------------")
     for elt in liste:
         if elt[1]== tmp:
             print(f" {elt[0]:11}|  {elt[2]}")
+
+def cmd_visualisation(liste):
+    """Menu de visualisation des performances"""
+    while True:
+        print("\nMenu de visualisation:")
+        print("1. Voir toutes les performances")
+        print("2. Voir les performances d'un nageur")
+        print("3. Voir tous les nageurs par type de nage")
+        print("4. Voir le résumé global")
+        print("5. Retour au menu principal")
+        
+        choix = input("\nVotre choix (1-5) ? ")
+        
+        if choix == "1":
+            cmd_liste(liste)
+        
+        elif choix == "2":
+            # Afficher la liste des nageurs disponibles
+            nageurs = sorted(set(elt[0] for elt in liste))
+            print("\nNageurs disponibles:", ", ".join(nageurs))
+            cmd_nageur(liste)
+        
+        elif choix == "3":
+            # Afficher la liste des nages disponibles
+            nages = sorted(set(elt[1] for elt in liste))
+            print("\nNages disponibles:", ", ".join(nages))
+            cmd_nage(liste)
+        
+        elif choix == "4":
+            # Résumé global
+            nageurs = set(elt[0] for elt in liste)
+            nages = set(elt[1] for elt in liste)
+            
+            print("\nRésumé global:")
+            print(f"Nombre total de nageurs: {len(nageurs)}")
+            print(f"Nombre total de nages différentes: {len(nages)}")
+            print("\nNageurs:", ", ".join(sorted(nageurs)))
+            print("Nages:", ", ".join(sorted(nages)))
+            
+            # Meilleure performance globale
+            meilleur_nageur, meilleure_nage, meilleure_perf = max(liste, key=lambda x: x[2])
+            print(f"\nMeilleure performance: {meilleur_nageur} ({meilleure_nage}) - {meilleure_perf} longueurs")
+        
+        elif choix == "5":
+            break
+        
+        else:
+            print("Choix invalide. Veuillez réessayer.")
 
 def cmd_performance(liste):
     """Gestion des performances"""
@@ -50,8 +99,7 @@ def cmd_performance(liste):
     choix = input("Votre choix (1-3) ? ")
     
     if choix == "1":
-        # Meilleures performances par nage
-        nages = set(elt[1] for elt in liste)  # Ensemble unique des nages
+        nages = set(elt[1] for elt in liste)
         print("\nMeilleures performances par nage:")
         print("Nage      | Nageur      | Longueur")
         print("----------------------------------")
@@ -61,8 +109,7 @@ def cmd_performance(liste):
             print(f" {nage:9}| {meilleur_nageur:11}| {meilleure_perf}")
     
     elif choix == "2":
-        # Meilleures performances par nageur
-        nageurs = set(elt[0] for elt in liste)  # Ensemble unique des nageurs
+        nageurs = set(elt[0] for elt in liste)
         print("\nMeilleures performances par nageur:")
         print("Nageur      | Nage      | Longueur")
         print("----------------------------------")
@@ -72,7 +119,6 @@ def cmd_performance(liste):
             print(f" {nageur:11}| {meilleure_nage:9}| {meilleure_perf}")
     
     elif choix == "3":
-        # Record absolu
         meilleur_nageur, meilleure_nage, meilleure_perf = max(liste, key=lambda x: x[2])
         print("\nRecord absolu:")
         print(f"Nageur: {meilleur_nageur}")
@@ -104,13 +150,21 @@ def cmd_load(liste, filename):
         if line[0]=='#':
             continue
         tmp = line.split(',')
-        tmp[2] = int(tmp[2])  # Conversion en entier
+        tmp[2] = int(tmp[2])
         liste.append(tuple(tmp))
     fichier.close()
 
 def get_cmd():
     '''Traitement de la commande d'entrée'''
-    msg = input("Que faut-il faire ? ")
+    print("\nCommandes disponibles:")
+    print("- ajout: Ajouter une performance")
+    print("- visualisation: Voir les performances")
+    print("- performance: Voir les meilleures performances")
+    print("- save: Sauvegarder les données")
+    print("- load: Charger les données")
+    print("- exit: Quitter le programme")
+    
+    msg = input("\nQue faut-il faire ? ")
     msg = msg.lower()
     return msg
 
@@ -119,26 +173,15 @@ while isAlive:
     commande = get_cmd()
     if commande == 'ajout':
         cmd_ajout(liste)
-        continue
-    if commande == 'liste':
-        cmd_liste(liste)
-        continue
-    if commande == 'nageur':
-        cmd_nageur(liste)
-        continue
-    if commande == 'nage':
-        cmd_nage(liste)
-        continue
-    if commande == 'performance':
+    elif commande == 'visualisation':
+        cmd_visualisation(liste)
+    elif commande == 'performance':
         cmd_performance(liste)
-        continue
-    if commande == 'save':
+    elif commande == 'save':
         cmd_save(liste, 'save.csv')
-        continue
-    if commande == 'load':
+    elif commande == 'load':
         cmd_load(liste, 'save.csv')
-        continue
-    if commande == 'exit':
+    elif commande == 'exit':
         isAlive = cmd_exit(liste)
-        continue
-    print(f"Commande {commande} inconnue")
+    else:
+        print(f"Commande {commande} inconnue")
