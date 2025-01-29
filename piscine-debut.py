@@ -15,9 +15,9 @@ def get_int_value(message="Valeur ? "):
 liste = [
     ("Pierre", "Dos", 10, "2024-05-10"),
     ("Paul", "Brasse", 13, "2024-05-10"),
-    ("Léa", "Crawl", 6, "2024-05-11"),
-    ("Léa", "Brasse", 8, "2024-05-13"),
-    ("Musa", "Papillon", 15, "2024-05-13")
+    ("Léa", "Crawl", 6, "2024-02-11"),
+    ("Léa", "Brasse", 8, "2024-06-13"),
+    ("Musa", "Papillon", 15, "2024-06-13")
 ]
 commande = ''
 
@@ -53,14 +53,37 @@ def cmd_liste(liste):
         print(f" {elt[0]:11}| {elt[1]:8}|  {elt[2]:9} | {elt[3]}")
 
 def cmd_nageur(liste):
-    """Affiche toutes les performances d'un nageur"""
-    tmp = input("Quel nageur ? ")
-    print("\nPerformances de", tmp)
-    print("nage    | longueur | date")
-    print("------------------------------------------------")
+    """Affiche toutes les performances d'un nageur avec statistiques"""
+    tmp = input("Quel numéro de nageur ? ")
+    print("\nPerformances")
+    print(f"de {tmp}")
+    print("\nnage | longueur")
+    print("--------------------")
+   
+    # Liste pour stocker les performances du nageur
+    performances = []
+   
+    # Affichage des performances et collecte des données
     for elt in liste:
         if elt[0] == tmp:
-            print(f"{elt[1]:8} |  {elt[2]:8} | {elt[3]}")
+            print(f"{elt[1]}")
+            print(f"| {elt[2]}")
+            performances.append(elt[2])
+   
+    # Calcul et affichage des statistiques si des performances existent
+    if performances:
+        max_perf = max(performances)
+        min_perf = min(performances)
+        moy_perf = sum(performances) / len(performances)
+       
+        print("\nMinimum")
+        print(f": {min_perf}")
+        print("\nMaximum")
+        print(f": {max_perf}")
+        print("\nMoyenne")
+        print(f": {moy_perf:.1f}")
+    else:
+        print(f"\nAucune performance enregistrée pour {tmp}")
 
 def cmd_nage(liste):
     """Affiche toutes les performances suivant une nage donnée"""
