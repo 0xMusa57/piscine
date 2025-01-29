@@ -157,30 +157,46 @@ def cmd_visualisation(liste):
             print("Choix invalide. Veuillez réessayer.")
 
 def cmd_save(liste, filename):
-    '''sauvegarde la BDD'''
-    fichier = open(filename, 'w')
-    for elt in liste:
-        fichier.write(f"{elt[0]},{elt[1]},{str(elt[2])},{elt[3]}\n")
-    fichier.close()
+    '''Sauvegarde la BDD'''
+    try:
+        with open(filename, 'w', encoding='utf-8') as fichier:
+            for elt in liste:
+                fichier.write(f"{elt[0]},{elt[1]},{elt[2]},{elt[3]}\n")
+        print(f"✅ Données sauvegardées dans {filename}")
+    except Exception as e:
+        print(f"❌ Erreur lors de la sauvegarde : {e}")
 
 def cmd_load(liste, filename):
-    'charge la BDD'
-    fichier = open(filename, 'r')
-    for line in fichier:
-        line = line.strip()
-        if line[-1] == '\n':
-            line = line[:-1]
-        if line[0] == '#':
-            continue
-        tmp = line.split(',')
-        tmp[2] = int(tmp[2])
-        liste.append(tuple(tmp))
-    fichier.close()
+    '''Charge la BDD'''
+    try:
+        with open(filename, 'r', encoding='utf-8') as fichier:
+            liste.clear()  # Efface l'ancienne liste pour éviter les doublons
+            for line in fichier:
+                line = line.strip()
+                if not line or line.startswith('#'):
+                    continue  # Ignore les lignes vides et les commentaires
+                
+                tmp = line.split(',')
+                if len(tmp) != 4:
+                    print(f"⚠️ Ligne mal formatée ignorée: {line}")
+                    continue
+                
+                try:
+                    tmp[2] = int(tmp[2])  # Conversion en entier
+                    liste.append(tuple(tmp))
+                except ValueError:
+                    print(f"⚠️ Erreur de conversion ignorée: {line}")
+        
+        print(f"✅ Données chargées depuis {filename}")
+    except FileNotFoundError:
+        print(f"❌ Fichier {filename} introuvable.")
+    except Exception as e:
+        print(f"❌ Erreur lors du chargement : {e}")
 
 def cmd_exit(liste):
     tmp = input("En êtes-vous sûr ? (o)ui/(n)on ")
     if tmp == 'o':
-        cmd_save(liste, 'save.backup')
+        cmd_save(liste, 'savebackup.csv')
         return False
     return True
 
