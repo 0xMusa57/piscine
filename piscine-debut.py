@@ -203,11 +203,11 @@ def cmd_exit(liste):
 def get_cmd():
     '''Traitement de la commande d'entrée'''
     print("\nCommandes disponibles:")
-    print("- ajout: Ajouter une performance")
-    print("- visualisation: Voir les performances")
-    print("- save: Sauvegarder les données")
-    print("- load: Charger les données")
-    print("- exit: Quitter le programme")
+    print("1 - ajout: Ajouter une performance")
+    print("2 - visualisation: Voir les performances")
+    print("3 - save: Sauvegarder les données")
+    print("4 - load: Charger les données")
+    print("5 - exit: Quitter le programme")
    
     msg = input("\nQue faut-il faire ? ")
     msg = msg.lower()
@@ -216,15 +216,15 @@ def get_cmd():
 isAlive = True
 while isAlive:
     commande = get_cmd()
-    if commande == 'ajout':
+    if commande == '1':
         cmd_ajout(liste)
-    elif commande == 'visualisation':
+    elif commande == '2':
         cmd_visualisation(liste)
-    elif commande == 'save':
+    elif commande == '3':
         cmd_save(liste, 'save.csv')
-    elif commande == 'load':
+    elif commande == '4':
         cmd_load(liste, 'save.csv')
-    elif commande == 'exit':
+    elif commande == '5':
         isAlive = cmd_exit(liste)
     else:
         print(f"Commande {commande} inconnue")
