@@ -203,11 +203,11 @@ def cmd_exit(liste):
 def get_cmd():
     '''Traitement de la commande d'entrée'''
     print("\nCommandes disponibles:")
-    print("1 - ajout: Ajouter une performance")
-    print("2 - visualisation: Voir les performances")
-    print("3 - save: Sauvegarder les données")
-    print("4 - load: Charger les données")
-    print("5 - exit: Quitter le programme")
+    print("1 - Ajouter une performance")
+    print("2 - Voir les performances")
+    print("3 - Sauvegarder les données")
+    print("4 - Charger les données")
+    print("5 - Quitter le programme")
    
     msg = input("\nQue faut-il faire ? ")
     msg = msg.lower()
